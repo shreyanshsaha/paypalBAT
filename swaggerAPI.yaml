@@ -8,6 +8,9 @@ info:
   license:
     name: MIT License
     url: 'https://opensource.org/licenses/MIT'
+externalDocs:
+  description: Github Repository
+  url: https://github.com/shreyanshsaha/paypalBAT
 
 servers:
   # Added by API Auto Mocking Plugin
@@ -1768,6 +1771,3 @@ components:
             'admin': Grants access to admin (write)
             'maintainer': Grants access to update
             'read': Grants access to read
-
-
-            
