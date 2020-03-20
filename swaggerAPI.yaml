@@ -1,0 +1,1755 @@
+openapi: 3.0.0
+info:
+  version: '1.0.0'
+  title: 'Brainwave Assistive Technologies'
+  description: 'REST API for Brainwave Assistive Technologics Supply chain mangement and logistics.'
+  contact:
+    email: "shreyansh@ieee.org"
+  license:
+    name: MIT License
+    url: 'https://opensource.org/licenses/MIT'
+# Added by API Auto Mocking Plugin
+
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/shreyanshVIT/BAT/1.0.0
+  - description: Localhost Server
+    url: http://localhost:3000
+
+security:
+  - batAuth:
+      - read
+      - write
+tags:
+  - name: "product"
+    description: "Everything about the products we make"
+  - name: "supplier"
+    description: "Supplier information"
+  - name: "material"
+    description: "Material information"
+  - name: "inventory"
+    description: "Inventory information"
+  - name: "team"
+    description: "Team information"
+  - name: "member"
+    description: "Member information"
+  - name: "store"
+    description: "Store information"
+  - name: "warehouse"
+    description: "Warehouse information"
+  - name: "factory"
+    description: "Factory information"
+  - name: "search"
+    description: "Search APIs"
+
+paths:
+  # Product
+  "/products":
+    get:
+      tags:
+        - "product"
+      summary: "Get all products"
+      description: "Returns json array of all products"
+      operationId: "getAllProducts"
+      parameters: 
+        - $ref: '#/components/parameters/LimitQuery'
+        - $ref: '#/components/parameters/OffSetQuery'
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags:
+        - "product"
+      summary: "Create a new product"
+      description: "Adds new product to collection passed via body"
+      operationId: "createProduct"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        # TODO: Complete this
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+    
+  "/products/{prodID}":
+    get:
+      tags: 
+        - "product"
+      summary: "Find product by ID"
+      description: "Returns a single product object"
+      operationId: "getProductById"
+      parameters: 
+      - name: "prodID"
+        in: "path"
+        description: "ID of product to return"
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: 
+      - "product"
+      summary: "Update product by ID"
+      description: "Updates information about a product"
+      operationId: "updateProduct"
+      parameters: 
+      - name: "prodID"
+        in: "path"
+        description: "ID of product to update"
+        required: true
+        schema:
+          type: string
+          
+      requestBody:
+        required: true
+        description: "Product Object to be updated"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        200:
+          description: "successful update"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: 
+        - "product"
+      summary: "Update product by ID"
+      description: "Delete product by ID"
+      operationId: "deleteProduct"
+      parameters: 
+      - name: "prodID"
+        in: "path"
+        description: "ID of product to delete"
+        required: true
+        schema:
+          type: string
+          
+      responses:
+        200:
+          description: "successful delete"
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+    
+  "/products/{prodID}/suppliers":
+    get:
+      tags:
+        - "product"
+      summary: "Get suppliers for a product"
+      description: "Returns array of suppliers"
+      operationId: "getProductSuppliers"
+      parameters:
+        - name: prodID
+          in: path
+          description: "ID of the product"
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/LimitQuery'
+        - $ref: '#/components/parameters/OffSetQuery'
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Supplier'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+    
+  "/products/{prodID}/materials":
+    get:
+      tags:
+        - "product"
+      summary: "Get materials for a product"
+      operationId: "getProductMaterials"
+      description: "Returns array of materials"
+      parameters:
+        - name: prodID
+          in: path
+          description: "ID of the product"
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/LimitQuery'
+        - $ref: '#/components/parameters/OffSetQuery'
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Material'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+  
+  "/products/search":
+    get:
+      tags:
+        - "search"
+      summary: "Get all products"
+      operationId: "searchProducts"
+      description: "Search for products by query"
+      parameters: 
+        - $ref: '#/components/parameters/LimitQuery'
+        - $ref: '#/components/parameters/OffSetQuery'
+        - name: "q"
+          in: query
+          explode: false
+          style: form
+          description: "query params to search"
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              dateCreated:
+                type: string
+                format: date
+              wip:
+                type: boolean
+            example: "?name=[name]&dateCreated=[date]&wip=[false]"
+              
+
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        401:
+          $ref: '#/components/responses/Unauthorized'          
+  
+  # Supplier
+  "/suppliers":
+    get:
+      tags:
+        - "supplier"
+      summary: "Get all suppliers"
+      operationId: "getAllSuppliers"
+      description: "Returns array of suppliers"
+      parameters: 
+        - $ref: '#/components/parameters/LimitQuery'
+        - $ref: '#/components/parameters/OffSetQuery'
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Supplier'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags:
+        - "supplier"
+      summary: "Add a new supplier"
+      operationId: "addSupplier"
+      description: "Adds new supplier to collection"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Supplier'
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Supplier'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+    
+  "/suppliers/search":
+    get:
+      summary: "Search for supplier"
+      description: "Searches for supplier based on query"
+      operationId: "searchSupplier"
+      tags:
+      - "search"
+      parameters:
+      - name: "q"
+        in: query
+        explode: false
+        style: form
+        description: "query params to search"
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+          example: "?name=[name]"
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Supplier'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+            
+  # Material
+  "/suppliers/materials":
+    get:
+      tags:
+      - "material"
+      summary: "Get all materials"
+      description: "Returns array of all materials"
+      operationId: "getAllMaterials"
+      parameters: 
+        - $ref: '#/components/parameters/LimitQuery'
+        - $ref: '#/components/parameters/OffSetQuery'
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Material'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+  
+  "/suppliers/materials/search":
+    get:
+      summary: "Search for material"
+      description: "Searches for a material based on query"
+      tags:
+      - "search"
+      parameters:
+      - name: "q"
+        in: query
+        explode: false
+        style: form
+        description: "query params to search"
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+            type:
+              type: string
+          example: "?name=[name]&type=[type]"
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Material'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+  
+  "/suppliers/{suppID}/materials":
+    get:
+      summary: "Get material by supplier"
+      operationId: "getMaterialBySupplier"
+      description: "Returns array of materials for given supplier"
+      tags:
+      - "material"
+      parameters: 
+      - name: "suppID"
+        in: path
+        required: true
+        schema:
+          type: string
+      - $ref: '#/components/parameters/LimitQuery'
+      - $ref: '#/components/parameters/OffSetQuery'
+      responses:
+        200:
+          description: "successful response"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Material'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+    post:
+      summary: "Add new material by supplier"
+      operationId: "addMaterial"
+      tags:
+      - "material"
+      parameters: 
+      - name: "suppID"
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: "successfuly added material"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Material'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+  
+  "/suppliers/{suppID}/materials/{matID}":
+    put:
+      summary: "Update material details"
+      operationId: "updateMaterial"
+      description: "Updates material"
+      tags:
+      - "material"
+      parameters: 
+      - name: "suppID"
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: "matID"
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Material'
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Material'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: "Delete Material"
+      operationId: "deleleMaterial"
+      description: "Deletes a material"
+      tags:
+      - 'material'
+      parameters: 
+      - name: "suppID"
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: "matID"
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: "successful operation"
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+  
+  #Inventory
+  "/inventory":
+    get:
+      summary: "Get all inventory items"
+      operationId: "getAllInventory"
+      description: "Returns array of inventory items"
+      tags:
+      - "inventory"
+      parameters: 
+        - $ref: '#/components/parameters/LimitQuery'
+        - $ref: '#/components/parameters/OffSetQuery'
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Inventory'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      summary: "Add inventory item"
+      description: "Adds a new item to inventory collection"
+      operationId: "addInventory"
+      tags:
+      - "inventory"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Inventory'
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inventory'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+  
+  "/inventory/{invID}":
+    get:
+      summary: "Get inventory item"
+      description: "Returns an inventory object"
+      operationId: "getInventory"
+      tags:
+        - "inventory"
+      parameters: 
+      - name: "invID"
+        in: path
+        description: "ID of inventory item"
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Inventory'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: "Update inventory item"
+      description: "Returns an inventory object"
+      operationId: "updateInventory"
+      tags:
+        - "inventory"
+      parameters: 
+      - name: "invID"
+        in: path
+        description: "ID of inventory item"
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/Inventory'
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Inventory'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+        - "inventory"
+      summary: "Delete inventory item"
+      operationId: ""
+      parameters: 
+      - name: "invID"
+        in: path
+        description: "ID of inventory item"
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: "successful operation"
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+  
+  "/inventory/search":
+    get:
+      summary: "Search for item in inventory"
+      description: "Searches inventory based on query"
+      operationId: "searchInventory"
+      tags:
+      - "search"
+      parameters: 
+      - name: "columnName"
+        in: query
+        description: "Column name to search value in"
+        schema:
+          type: string
+      - name: "value"
+        in: query
+        description: "Value to search for"
+        schema:
+          type: string
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inventory'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+
+  #Team
+  "/teams":
+    get:
+      summary: "Get all teams"
+      description: "Returns array of teams"
+      operationId: "getAllTeams"
+      parameters: 
+        - $ref: '#/components/parameters/LimitQuery'
+        - $ref: '#/components/parameters/OffSetQuery'
+      tags:
+      - "team"
+      responses:
+        200:
+          description: "sucessful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+  
+  "/teams/{teamID}":
+    get:
+      summary: "Get team by ID"
+      description: "Returns team object"
+      operationId: "getTeam"
+      tags:
+      - "team"
+      parameters: 
+      - name: "teamID"
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+  
+  "/teams/{teamID}/members":
+    get:
+      summary: "Get all members in a team"
+      description: "Returns array of all members in a team"
+      operationId: "getTeamMembers"
+      tags:
+      - "team"
+      
+      parameters: 
+      - name: "teamID"
+        in: path
+        required: true
+        schema:
+          type: string
+      - $ref: '#/components/parameters/LimitQuery'
+      - $ref: '#/components/parameters/OffSetQuery'
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+  
+  #Member
+  "/members":
+    get:
+      summary: "Get all members"
+      description: "Returns array of all members"
+      operationId: "getAllMembers"
+      tags:
+      - "member"
+      parameters: 
+        - $ref: '#/components/parameters/LimitQuery'
+        - $ref: '#/components/parameters/OffSetQuery'
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Member'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+  
+  "/members/{empID}":
+    get:
+      summary: "Get member by ID"
+      description: "Returns member object"
+      operationId: "getMember"
+      tags:
+      - "member"
+      parameters: 
+      - name: "empID"
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+  
+  "/members/search":
+    get:
+      summary: "Search for member"
+      operationId: "Search member by ID"
+      description: "Returns array of members by query"
+      tags:
+      - "search"
+      parameters:
+      - name: "q"
+        in: query
+        explode: false
+        style: form
+        description: "query params to search"
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+          example: "?name=[name]"
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Member'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+  
+  #Store
+  "/store":
+    get:
+      summary: "Get all stores"
+      description: "Returns array of all stores"
+      operationId: "getAllStores"
+      tags:
+      - "store"
+      parameters: 
+        - $ref: '#/components/parameters/LimitQuery'
+        - $ref: '#/components/parameters/OffSetQuery'
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Store'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      summary: "Add a new store"
+      description: "Adds a new store to collection"
+      operationId: "addStore"
+      tags: 
+      - "store"
+      requestBody:
+        description: "Store object to be sent"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Store'
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+    
+  "/store/search":
+    get:
+      summary: "Search for store"
+      description: "Returns array of stores based on query"
+      operationId: "searchStore"
+      tags:
+      - "search"
+      parameters:
+      - name: "q"
+        in: query
+        explode: false
+        style: form
+        description: "query params to search"
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+            ownership:
+              type: string
+              enum:
+                - "first"
+                - "third"
+            location:
+              type: string
+          example: "?name=[name]&ownership=[ownership]&location=[location]&name=[name]"
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Supplier'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+  "/store/{storeID}":
+    put:
+      summary: "Update store details"
+      description: "Updates store details in collection"
+      operationId: "updateStore"
+      tags:
+        - "store"
+      parameters: 
+      - name: "storeID"
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Store'
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: "Delete store"
+      description: "Removes store from collection"
+      operationId: "deleteStore"
+      tags:
+      - "store"
+      parameters: 
+      - name: "storeID"
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+    
+  "/store/{storeID}/products":
+    get:
+      tags:
+      - "store"
+      summary: "Get details of all products in store"
+      parameters: 
+      - name: "storeID"
+        in: path
+        required: true
+        schema:
+          type: string
+      - $ref: '#/components/parameters/LimitQuery'
+      - $ref: '#/components/parameters/OffSetQuery'
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+    post:
+      summary: "Add a new product to store"
+      description: "Adds a new product to store collection"
+      operationId: "addProductToStore"
+      tags:
+      - "store"
+      parameters: 
+      - name: "storeID"
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: "ID of the product to be added"
+              properties:
+                productID:
+                  type: string
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+    
+  "/store/{storeID}/products/{prodID}":
+    delete:
+      summary: "Remove product from store"
+      description: "Removes product from store collection"
+      operationId: "removeProductFromStore"
+      tags:
+      - "store"
+      parameters: 
+      - name: "storeID"
+        description: "ID of the store"
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: "prodID"
+        description: "ID of the product"
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: "successful operation"
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+
+  # Warehouse
+  "/warehouses":
+    get:
+      summary: "Get all warehouses"
+      description: "Returns array of all warehouses"
+      operationId: "getAllWarehouses"
+      tags:
+      - "warehouse"
+      responses:
+        200:  
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Warehouse'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      summary: "Add a new warehouse"
+      description: "Adds a new warehouse to collection"
+      operationId: "addWarehouse"
+      tags:
+      - "warehouse"
+      parameters: 
+        - name: "warehouseID"
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Warehouse'
+      responses:
+        200:  
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Warehouse'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+  
+  "/warehouses/{warehouseID}":
+    get:
+      summary: "Get warehouse by id"
+      description: "Returns warehouse object"
+      operationId: "getWarehouse"
+      tags:
+      - "warehouse"
+      parameters: 
+        - name: "warehouseID"
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:  
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Warehouse'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: "Edit warehouse details"
+      description: "Updates warehouse details in collection"
+      operationId: "updateWarehouse"
+      tags:
+      - "warehouse"
+      parameters: 
+        - name: "warehouseID"
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Warehouse'
+      responses:
+        200:  
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Warehouse'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+  
+  "/warehouses/{warehouseID}/items":
+    get:
+      summary: "Get all items stored in warehouse"
+      description: "Returns array of items in warehouse"
+      operationId: "getWarehouseItems"
+      tags:
+      - "warehouse"
+      parameters:
+        - name: "warehouseID"
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                    - $ref: '#/components/schemas/Product'
+                    - $ref: '#/components/schemas/Material'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: "Add new item to warehouse"
+      tags:
+      - "warehouse"
+      parameters:
+        - name: "warehouseID"
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    productID:
+                      type: string
+                      description: "ID of the product"
+                - type: object
+                  properties:
+                    materialID:
+                      type: string
+                      description: "ID of the material"
+      responses:
+        200:
+          description: "successful operation"
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+  
+  "/warehouse/search":
+    get:
+      summary: "Search warehouse"
+      description: "Returns array of warehouse given by query"
+      tags:
+        - "search"
+      parameters: 
+      - name: "q"
+        in: query
+        required: false
+        schema:
+          type: object
+          properties:
+            location:
+              type: string
+            type:
+              type: string
+            capacity:
+              type: string
+      - $ref: '#/components/parameters/LimitQuery'
+      - $ref: '#/components/parameters/OffSetQuery'
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Warehouse'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+  
+  # Factory
+  "/factories":
+    get:
+      summary: "Get all factories"
+      description: "Returns array of all factories"
+      operationId: "getAllFactory"
+      tags:
+      - "factory"
+      responses:
+        200:  
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Factory'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+  
+  "/factories/{factoryID}":
+    get:
+      summary: "Get factory by id"
+      description: "Returns factory object"
+      operationId: "getFactory"
+      tags:
+      - "factory"
+      parameters: 
+        - name: "factoryID"
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:  
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Factory'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+    post:
+      summary: "Add a new factory"
+      description: "Adds a new factory to collection"
+      operationId: "addFactory"
+      tags:
+      - "factory"
+      parameters: 
+        - name: "factoryID"
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Factory'
+      responses:
+        200:  
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Factory'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: "Edit factory details"
+      description: "Updates factory in collection"
+      operationId: "updateFactory"
+      tags:
+      - "factory"
+      parameters: 
+        - name: "factoryID"
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Factory'
+      responses:
+        200:  
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Factory'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: "Remove factory details"
+      description: "Removes factory from collection"
+      operationId: "removeFactory"
+      tags:
+      - "factory"
+      parameters: 
+        - name: "factoryID"
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:  
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Factory'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+  
+  "/factories/{factoryID}/products":
+    get:
+      summary: "Get all products"
+      description: "Returns array of products manufactured in factory"
+      operationId: "getFactoryProducts"
+      tags:
+      - "factory"
+      parameters:
+        - name: "factoryID"
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: "Add new product"
+      description: "Add new product to factory collection"
+      operationId: "addProductToFactory"
+      tags:
+      - "factory"
+      parameters:
+        - name: "factoryID"
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productID:
+                  type: string
+                  description: "ID of the product"
+      responses:
+        200:
+          description: "successful operation"
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+  
+  "/factories/{factoryID}/products/{productID}":
+    delete:
+      summary: "Remove product"
+      description: "Remove product from product collection"
+      operationId: "removeProductFromFactory"
+      tags:
+      - "factory"
+      parameters:
+        - name: "factoryID"
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: "productID"
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: "successful operation"
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+  
+  "/factories/search":
+    get:
+      summary: "Search factory"
+      description: "Returns array of factories given by query"
+      tags:
+        - "search"
+      parameters: 
+      - name: "q"
+        in: query
+        required: false
+        schema:
+          type: object
+          properties:
+            location:
+              type: string
+      - $ref: '#/components/parameters/LimitQuery'
+      - $ref: '#/components/parameters/OffSetQuery'
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Factory'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+
+# Add product type
+components:
+  schemas:
+    Member:
+      type: object
+      properties:
+        empID:
+          type: string
+          description: "Employee ID"
+          example: "E001"
+        name:
+          type: string
+          description: "Name of the employee"
+          example: "Employee 1"
+        age:
+          type: integer
+          minimum: 18
+          maximum: 60
+          description: "Age of the employee"
+          example: "25"
+    Team:
+      type: object
+      properties:
+        id:
+          type: string
+          description: "ID of the team"
+          example: "TA001"
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/Member'
+    Product:
+      type: object
+      required: 
+      - "id"
+      - "name"
+      properties:
+        id:
+          type: string
+          description: "ID of the product"
+          example: "P001"
+        name:
+          type: string
+          description: "Name of the product"
+          example: "Cere Cort 1"
+        version:
+          type: string
+          description: "Version of product"
+          default: "0.0.1"
+          pattern: '^\d\.\d\.\d$'
+          example: "0.0.1"
+        dateCreated:
+          type: string
+          format: date
+          description: "Date on which the product was added"
+          example: "2020-03-31"
+        wip:
+          type: boolean
+          default: true
+          description: "Specify work in progress"
+        category:
+          type: string
+          default: "hardware"
+          description: "Specify if software or hardware product"
+          enum:
+          - "hardware"
+          - "software"
+        # team:
+        #   $ref: '#/components/schemas/Team'
+    Material:
+      type: object
+      properties:
+        id:
+          type: string
+          description: "ID of the material"
+          example: "M0001"
+        name:
+          type: string
+          description: "Name of the material"
+          example: "silicon T2"
+        type:
+          type: string
+          enum: [raw, component]
+          example: "raw"
+    Supplier:
+      type: object
+      required: 
+      - "id"
+      - "name"
+      - "materials"
+      properties:
+        id:
+          type: string
+          description: "ID of the supplier"
+          example: "S001"
+        name:
+          type: string
+          description: "Name of the supplier"
+          example: "Radiant Electronics"
+        # forProduct:
+        #   type: string
+        #   description: "ID of the product to which materials are supplied to"
+        materials:
+          type: array
+          items:
+            $ref: '#/components/schemas/Material'
+    Inventory:
+      type: object
+      required:
+      - "id"
+      - "itemID"
+      - "inventoryType"
+      properties:
+        id:
+          type: string
+          description: "ID of the warehouse item"
+          example: "I001"
+        storageType:
+          type: string
+          enum: [warehouse, store]
+          description: "Type of storage where the item is stored"
+          example: "warehouse"
+        storageID:
+          type: string
+          description: "ID of storage where the item is stored"
+          example: "W001"
+        quantity:
+          type: integer
+          description: "Quantity of the item at this inventory"
+          example: 100
+        inventoryType:
+          type: string
+          enum: [product, material, component]
+          description: "Type of item stored"
+          example: "material"
+        itemID:
+          type: string
+          description: "ID of item stored"
+          example: "M0001"
+    Store:
+      type: object
+      required:
+      - "id"
+      - "ownership"
+      properties:
+        id:
+          type: string
+          description: "ID of the store"
+          example: "S001"
+        ownership:
+          type: string
+          description: "First party retail or Third party store"
+          enum:
+          - "first"
+          - "third"
+          example: "third"
+        location:
+          type: string
+          description: "Location of store"
+          example: "online"
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        name:
+          type: string
+          description: "Name of the store if third party"
+          nullable: true
+          example: "amazon"
+    Warehouse:
+      type: object
+      required:
+        - id
+        - location
+      properties:
+        id:
+          type: string
+          description: "ID of warehouse"
+          example: "W001"
+        location:
+          type: string
+          description: "Location of warehouse"
+          example: "banglore"
+        type:
+          type: string
+          description: "Type of item"
+          enum:
+            - "material"
+            - "product"
+            - "component"
+          example: "product"
+        capacity:
+          type: integer
+          description: "Capacity of warehouse"
+        items:
+          description: "Array of items stored in warehouse"
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/Product'
+              - $ref: '#/components/schemas/Material'
+    Factory:
+      type: object
+      required:
+      - id
+      - location
+      properties:
+        id:
+          type: string
+          description: "ID of the factory"
+          example: "F001"
+        location: 
+          type: string
+          description: "Location of the factory"
+          example: "mumbai"
+        products:
+          description: "Products or components manufactured"
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+      
+  responses:
+    BadRequest:
+      description: "Bad Request"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: "The specified resource was not found"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: "Unauthorized request"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  parameters:
+    LimitQuery:
+      name: "limit"
+      description: "The number of items to retrieve"
+      in: query
+      required: false
+      schema:
+        type: integer
+    OffSetQuery:
+      name: "offset"
+      in: query
+      required: false
+      description: "Number of items to set offset to"
+      schema:
+        type: integer
+        
+        
+  securitySchemes:
+    batAuth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: 'http://bat.com/oauth'
+          scopes:
+            'admin': Grants access to admin (write)
+            'maintainer': Grants access to update
+            'read': Grants access to read
