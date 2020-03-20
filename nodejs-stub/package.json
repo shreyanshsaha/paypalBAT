@@ -1,0 +1,20 @@
+{
+  "name": "brainwave-assistive-technologies",
+  "version": "1.0.0",
+  "description": "REST API for <b>Brainwave Assistive Technologics</b> Supply chain mangement and logistics.<br><br>The product mangement system is made for a startup named Brainwave Assistive Technologies. The startup builds neurotechnology devices with the help of Brain Computer Interfaces. The product mangement system is meant for the employees of the company to help with supply chain management and logistics.",
+  "main": "index.js",
+  "scripts": {
+	"prestart": "npm install",
+	"start": "node index.js"
+  },
+  "keywords": [
+    "swagger"
+  ],
+  "license": "Unlicense",
+  "private": true,
+  "dependencies": {
+    "connect": "^3.2.0",
+    "js-yaml": "^3.3.0",
+    "oas3-tools": "^2.0.2"
+  }
+}

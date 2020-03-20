@@ -1,0 +1,2596 @@
+openapi: 3.0.0
+info:
+  title: Brainwave Assistive Technologies
+  description: REST API for <b>Brainwave Assistive Technologics</b> Supply chain mangement
+    and logistics.<br><br>The product mangement system is made for a startup named
+    Brainwave Assistive Technologies. The startup builds neurotechnology devices with
+    the help of Brain Computer Interfaces. The product mangement system is meant for
+    the employees of the company to help with supply chain management and logistics.
+  contact:
+    email: shreyansh@ieee.org
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/shreyanshVIT/BAT/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: http://localhost:3000
+  description: Localhost Server
+security:
+- batAuth:
+  - read
+  - write
+tags:
+- name: product
+  description: Everything about the products we make
+- name: supplier
+  description: Supplier information
+- name: material
+  description: Material information
+- name: inventory
+  description: Inventory information
+- name: team
+  description: Team information
+- name: member
+  description: Member information
+- name: store
+  description: Store information
+- name: warehouse
+  description: Warehouse information
+- name: factory
+  description: Factory information
+- name: search
+  description: Search APIs
+paths:
+  /products:
+    get:
+      tags:
+      - product
+      summary: Get all products
+      description: Returns json array of all products
+      operationId: getAllProducts
+      parameters:
+      - name: limit
+        in: query
+        description: The number of items to retrieve
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: offset
+        in: query
+        description: Number of items to set offset to
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Product
+    post:
+      tags:
+      - product
+      summary: Create a new product
+      description: Adds new product to collection passed via body
+      operationId: createProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Product
+  /products/{prodID}:
+    get:
+      tags:
+      - product
+      summary: Find product by ID
+      description: Returns a single product object
+      operationId: getProductById
+      parameters:
+      - name: prodID
+        in: path
+        description: ID of product to return
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Product
+    put:
+      tags:
+      - product
+      summary: Update product by ID
+      description: Updates information about a product
+      operationId: updateProduct
+      parameters:
+      - name: prodID
+        in: path
+        description: ID of product to update
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Product Object to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      responses:
+        "200":
+          description: successful update
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Product
+    delete:
+      tags:
+      - product
+      summary: Update product by ID
+      description: Delete product by ID
+      operationId: deleteProduct
+      parameters:
+      - name: prodID
+        in: path
+        description: ID of product to delete
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successfully deleted
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Product
+  /products/{prodID}/suppliers:
+    get:
+      tags:
+      - product
+      summary: Get suppliers for a product
+      description: Returns array of suppliers
+      operationId: getProductSuppliers
+      parameters:
+      - name: prodID
+        in: path
+        description: ID of the product
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: The number of items to retrieve
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: offset
+        in: query
+        description: Number of items to set offset to
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Supplier'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Product
+  /products/{prodID}/materials:
+    get:
+      tags:
+      - product
+      summary: Get materials for a product
+      description: Returns array of materials
+      operationId: getProductMaterials
+      parameters:
+      - name: prodID
+        in: path
+        description: ID of the product
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: The number of items to retrieve
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: offset
+        in: query
+        description: Number of items to set offset to
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Material'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Product
+  /products/search:
+    get:
+      tags:
+      - search
+      summary: Get all products
+      description: Search for products by query
+      operationId: searchProducts
+      parameters:
+      - name: limit
+        in: query
+        description: The number of items to retrieve
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: offset
+        in: query
+        description: Number of items to set offset to
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: q
+        in: query
+        description: query params to search
+        required: false
+        style: form
+        explode: false
+        schema:
+          $ref: '#/components/schemas/q'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Search
+  /suppliers:
+    get:
+      tags:
+      - supplier
+      summary: Get all suppliers
+      description: Returns array of suppliers
+      operationId: getAllSuppliers
+      parameters:
+      - name: limit
+        in: query
+        description: The number of items to retrieve
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: offset
+        in: query
+        description: Number of items to set offset to
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Supplier'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Supplier
+    post:
+      tags:
+      - supplier
+      summary: Add a new supplier
+      description: Adds new supplier to collection
+      operationId: addSupplier
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Supplier'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Supplier'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Supplier
+  /suppliers/search:
+    get:
+      tags:
+      - search
+      summary: Search for supplier
+      description: Searches for supplier based on query
+      operationId: searchSupplier
+      parameters:
+      - name: q
+        in: query
+        description: query params to search
+        required: false
+        style: form
+        explode: false
+        schema:
+          $ref: '#/components/schemas/q_1'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Supplier'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Search
+  /suppliers/materials:
+    get:
+      tags:
+      - material
+      summary: Get all materials
+      description: Returns array of all materials
+      operationId: getAllMaterials
+      parameters:
+      - name: limit
+        in: query
+        description: The number of items to retrieve
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: offset
+        in: query
+        description: Number of items to set offset to
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Material'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Material
+  /suppliers/materials/search:
+    get:
+      tags:
+      - search
+      summary: Search for material
+      description: Searches for a material based on query
+      operationId: suppliersMaterialsSearchGET
+      parameters:
+      - name: q
+        in: query
+        description: query params to search
+        required: false
+        style: form
+        explode: false
+        schema:
+          $ref: '#/components/schemas/q_2'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Material'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Search
+  /suppliers/{suppID}/materials:
+    get:
+      tags:
+      - material
+      summary: Get material by supplier
+      description: Returns array of materials for given supplier
+      operationId: getMaterialBySupplier
+      parameters:
+      - name: suppID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: The number of items to retrieve
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: offset
+        in: query
+        description: Number of items to set offset to
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Material'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Material
+    post:
+      tags:
+      - material
+      summary: Add new material by supplier
+      operationId: addMaterial
+      parameters:
+      - name: suppID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successfuly added material
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Material'
+                x-content-type: application/json
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Material
+  /suppliers/{suppID}/materials/{matID}:
+    put:
+      tags:
+      - material
+      summary: Update material details
+      description: Updates material
+      operationId: updateMaterial
+      parameters:
+      - name: suppID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: matID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Material'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Material'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Material
+    delete:
+      tags:
+      - material
+      summary: Delete Material
+      description: Deletes a material
+      operationId: deleleMaterial
+      parameters:
+      - name: suppID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: matID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Material
+  /inventory:
+    get:
+      tags:
+      - inventory
+      summary: Get all inventory items
+      description: Returns array of inventory items
+      operationId: getAllInventory
+      parameters:
+      - name: limit
+        in: query
+        description: The number of items to retrieve
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: offset
+        in: query
+        description: Number of items to set offset to
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Inventory'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Inventory
+    post:
+      tags:
+      - inventory
+      summary: Add inventory item
+      description: Adds a new item to inventory collection
+      operationId: addInventory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Inventory'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inventory'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Inventory
+  /inventory/{invID}:
+    get:
+      tags:
+      - inventory
+      summary: Get inventory item
+      description: Returns an inventory object
+      operationId: getInventory
+      parameters:
+      - name: invID
+        in: path
+        description: ID of inventory item
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inventory'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Inventory
+    put:
+      tags:
+      - inventory
+      summary: Update inventory item
+      description: Returns an inventory object
+      operationId: updateInventory
+      parameters:
+      - name: invID
+        in: path
+        description: ID of inventory item
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Inventory'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inventory'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Inventory
+    delete:
+      tags:
+      - inventory
+      summary: Delete inventory item
+      operationId: inventoryInvIDDELETE
+      parameters:
+      - name: invID
+        in: path
+        description: ID of inventory item
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Inventory
+  /inventory/search:
+    get:
+      tags:
+      - search
+      summary: Search for item in inventory
+      description: Searches inventory based on query
+      operationId: searchInventory
+      parameters:
+      - name: columnName
+        in: query
+        description: Column name to search value in
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: value
+        in: query
+        description: Value to search for
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inventory'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Search
+  /teams:
+    get:
+      tags:
+      - team
+      summary: Get all teams
+      description: Returns array of teams
+      operationId: getAllTeams
+      parameters:
+      - name: limit
+        in: query
+        description: The number of items to retrieve
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: offset
+        in: query
+        description: Number of items to set offset to
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: sucessful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Team
+  /teams/{teamID}:
+    get:
+      tags:
+      - team
+      summary: Get team by ID
+      description: Returns team object
+      operationId: getTeam
+      parameters:
+      - name: teamID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Team
+  /teams/{teamID}/members:
+    get:
+      tags:
+      - team
+      summary: Get all members in a team
+      description: Returns array of all members in a team
+      operationId: getTeamMembers
+      parameters:
+      - name: teamID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: The number of items to retrieve
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: offset
+        in: query
+        description: Number of items to set offset to
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Team
+  /members:
+    get:
+      tags:
+      - member
+      summary: Get all members
+      description: Returns array of all members
+      operationId: getAllMembers
+      parameters:
+      - name: limit
+        in: query
+        description: The number of items to retrieve
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: offset
+        in: query
+        description: Number of items to set offset to
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Member'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Member
+  /members/{empID}:
+    get:
+      tags:
+      - member
+      summary: Get member by ID
+      description: Returns member object
+      operationId: getMember
+      parameters:
+      - name: empID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+      x-swagger-router-controller: Member
+  /members/search:
+    get:
+      tags:
+      - search
+      summary: Search for member
+      description: Returns array of members by query
+      operationId: Search member by ID
+      parameters:
+      - name: q
+        in: query
+        description: query params to search
+        required: false
+        style: form
+        explode: false
+        schema:
+          $ref: '#/components/schemas/q_3'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Member'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Search
+  /store:
+    get:
+      tags:
+      - store
+      summary: Get all stores
+      description: Returns array of all stores
+      operationId: getAllStores
+      parameters:
+      - name: limit
+        in: query
+        description: The number of items to retrieve
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: offset
+        in: query
+        description: Number of items to set offset to
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Store'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Store
+    post:
+      tags:
+      - store
+      summary: Add a new store
+      description: Adds a new store to collection
+      operationId: addStore
+      requestBody:
+        description: Store object to be sent
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Store'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Store
+  /store/search:
+    get:
+      tags:
+      - search
+      summary: Search for store
+      description: Returns array of stores based on query
+      operationId: searchStore
+      parameters:
+      - name: q
+        in: query
+        description: query params to search
+        required: false
+        style: form
+        explode: false
+        schema:
+          $ref: '#/components/schemas/q_4'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Supplier'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Search
+  /store/{storeID}:
+    put:
+      tags:
+      - store
+      summary: Update store details
+      description: Updates store details in collection
+      operationId: updateStore
+      parameters:
+      - name: storeID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Store'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Store
+    delete:
+      tags:
+      - store
+      summary: Delete store
+      description: Removes store from collection
+      operationId: deleteStore
+      parameters:
+      - name: storeID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Store
+  /store/{storeID}/products:
+    get:
+      tags:
+      - store
+      summary: Get details of all products in store
+      operationId: storeStoreIDProductsGET
+      parameters:
+      - name: storeID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: The number of items to retrieve
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: offset
+        in: query
+        description: Number of items to set offset to
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Store
+    post:
+      tags:
+      - store
+      summary: Add a new product to store
+      description: Adds a new product to store collection
+      operationId: addProductToStore
+      parameters:
+      - name: storeID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Store
+  /store/{storeID}/products/{prodID}:
+    delete:
+      tags:
+      - store
+      summary: Remove product from store
+      description: Removes product from store collection
+      operationId: removeProductFromStore
+      parameters:
+      - name: storeID
+        in: path
+        description: ID of the store
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: prodID
+        in: path
+        description: ID of the product
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Store
+  /warehouses:
+    get:
+      tags:
+      - warehouse
+      summary: Get all warehouses
+      description: Returns array of all warehouses
+      operationId: getAllWarehouses
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Warehouse'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Warehouse
+    post:
+      tags:
+      - warehouse
+      summary: Add a new warehouse
+      description: Adds a new warehouse to collection
+      operationId: addWarehouse
+      parameters:
+      - name: warehouseID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Warehouse'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Warehouse'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Warehouse
+  /warehouses/{warehouseID}:
+    get:
+      tags:
+      - warehouse
+      summary: Get warehouse by id
+      description: Returns warehouse object
+      operationId: getWarehouse
+      parameters:
+      - name: warehouseID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Warehouse'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Warehouse
+    put:
+      tags:
+      - warehouse
+      summary: Edit warehouse details
+      description: Updates warehouse details in collection
+      operationId: updateWarehouse
+      parameters:
+      - name: warehouseID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Warehouse'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Warehouse'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Warehouse
+  /warehouses/{warehouseID}/items:
+    get:
+      tags:
+      - warehouse
+      summary: Get all items stored in warehouse
+      description: Returns array of items in warehouse
+      operationId: getWarehouseItems
+      parameters:
+      - name: warehouseID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                  - $ref: '#/components/schemas/Product'
+                  - $ref: '#/components/schemas/Material'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Warehouse
+    put:
+      tags:
+      - warehouse
+      summary: Add new item to warehouse
+      operationId: warehousesWarehouseIDItemsPUT
+      parameters:
+      - name: warehouseID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_1'
+            examples:
+              Product:
+                value:
+                  type: product
+                  id: P001
+              Material:
+                value:
+                  type: material
+                  id: M001
+      responses:
+        "200":
+          description: successful operation
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Warehouse
+  /warehouse/search:
+    get:
+      tags:
+      - search
+      summary: Search warehouse
+      description: Returns array of warehouse given by query
+      operationId: warehouseSearchGET
+      parameters:
+      - name: limit
+        in: query
+        description: The number of items to retrieve
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: offset
+        in: query
+        description: Number of items to set offset to
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: q
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/q_5'
+        example: ?location=[location]&type=[type]&capacity=[capacity]
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Warehouse'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Search
+  /factories:
+    get:
+      tags:
+      - factory
+      summary: Get all factories
+      description: Returns array of all factories
+      operationId: getAllFactory
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Factory'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Factory
+  /factories/{factoryID}:
+    get:
+      tags:
+      - factory
+      summary: Get factory by id
+      description: Returns factory object
+      operationId: getFactory
+      parameters:
+      - name: factoryID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Factory'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Factory
+    put:
+      tags:
+      - factory
+      summary: Edit factory details
+      description: Updates factory in collection
+      operationId: updateFactory
+      parameters:
+      - name: factoryID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Factory'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Factory'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Factory
+    post:
+      tags:
+      - factory
+      summary: Add a new factory
+      description: Adds a new factory to collection
+      operationId: addFactory
+      parameters:
+      - name: factoryID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Factory'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Factory'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Factory
+    delete:
+      tags:
+      - factory
+      summary: Remove factory details
+      description: Removes factory from collection
+      operationId: removeFactory
+      parameters:
+      - name: factoryID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Factory'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Factory
+  /factories/{factoryID}/products:
+    get:
+      tags:
+      - factory
+      summary: Get all products
+      description: Returns array of products manufactured in factory
+      operationId: getFactoryProducts
+      parameters:
+      - name: factoryID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Factory
+    put:
+      tags:
+      - factory
+      summary: Add new product
+      description: Add new product to factory collection
+      operationId: addProductToFactory
+      parameters:
+      - name: factoryID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_2'
+      responses:
+        "200":
+          description: successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Factory
+  /factories/{factoryID}/products/{productID}:
+    delete:
+      tags:
+      - factory
+      summary: Remove product
+      description: Remove product from product collection
+      operationId: removeProductFromFactory
+      parameters:
+      - name: factoryID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: productID
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Factory
+  /factories/search:
+    get:
+      tags:
+      - search
+      summary: Search factory
+      description: Returns array of factories given by query
+      operationId: factoriesSearchGET
+      parameters:
+      - name: limit
+        in: query
+        description: The number of items to retrieve
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: offset
+        in: query
+        description: Number of items to set offset to
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: location
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Factory'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Search
+components:
+  schemas:
+    Member:
+      type: object
+      properties:
+        empID:
+          type: string
+          description: Employee ID
+          example: E001
+        name:
+          type: string
+          description: Name of the employee
+          example: Employee 1
+        age:
+          maximum: 60
+          minimum: 18
+          type: integer
+          description: Age of the employee
+          example: 25
+      example:
+        empID: E001
+        name: Employee 1
+        age: 25
+    Team:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the team
+          example: TA001
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/Member'
+      example:
+        members:
+        - empID: E001
+          name: Employee 1
+          age: 25
+        - empID: E001
+          name: Employee 1
+          age: 25
+        id: TA001
+    Product:
+      required:
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the product
+          example: P001
+        name:
+          type: string
+          description: Name of the product
+          example: Cere Cort 1
+        version:
+          pattern: ^\d\.\d\.\d$
+          type: string
+          description: Version of product
+          example: 0.0.1
+          default: 0.0.1
+        dateCreated:
+          type: string
+          description: Date on which the product was added
+          format: date
+          example: 2020-03-31
+        wip:
+          type: boolean
+          description: Specify work in progress
+          default: true
+        category:
+          type: string
+          description: Specify if software or hardware product
+          default: hardware
+          enum:
+          - hardware
+          - software
+      example:
+        dateCreated: 2020-03-31T00:00:00.000+0000
+        name: Cere Cort 1
+        id: P001
+        category: hardware
+        version: 0.0.1
+        wip: true
+    Material:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the material
+          example: M0001
+        name:
+          type: string
+          description: Name of the material
+          example: silicon T2
+        type:
+          type: string
+          example: raw
+          enum:
+          - raw
+          - component
+      example:
+        name: silicon T2
+        id: M0001
+        type: raw
+    Supplier:
+      required:
+      - id
+      - materials
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the supplier
+          example: S001
+        name:
+          type: string
+          description: Name of the supplier
+          example: Radiant Electronics
+        materials:
+          type: array
+          items:
+            $ref: '#/components/schemas/Material'
+      example:
+        materials:
+        - name: silicon T2
+          id: M0001
+          type: raw
+        - name: silicon T2
+          id: M0001
+          type: raw
+        name: Radiant Electronics
+        id: S001
+    Inventory:
+      required:
+      - id
+      - inventoryType
+      - itemID
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the warehouse item
+          example: I001
+        storageType:
+          type: string
+          description: Type of storage where the item is stored
+          example: warehouse
+          enum:
+          - warehouse
+          - store
+        storageID:
+          type: string
+          description: ID of storage where the item is stored
+          example: W001
+        quantity:
+          type: integer
+          description: Quantity of the item at this inventory
+          example: 100
+        inventoryType:
+          type: string
+          description: Type of item stored
+          example: material
+          enum:
+          - product
+          - material
+          - component
+        itemID:
+          type: string
+          description: ID of item stored
+          example: M0001
+      example:
+        itemID: M0001
+        inventoryType: material
+        quantity: 100
+        storageType: warehouse
+        id: I001
+        storageID: W001
+    Store:
+      required:
+      - id
+      - ownership
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the store
+          example: S001
+        ownership:
+          type: string
+          description: First party retail or Third party store
+          example: third
+          enum:
+          - first
+          - third
+        location:
+          type: string
+          description: Location of store
+          example: online
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        name:
+          type: string
+          description: Name of the store if third party
+          nullable: true
+          example: amazon
+      example:
+        ownership: third
+        name: amazon
+        location: online
+        id: S001
+        products:
+        - dateCreated: 2020-03-31T00:00:00.000+0000
+          name: Cere Cort 1
+          id: P001
+          category: hardware
+          version: 0.0.1
+          wip: true
+        - dateCreated: 2020-03-31T00:00:00.000+0000
+          name: Cere Cort 1
+          id: P001
+          category: hardware
+          version: 0.0.1
+          wip: true
+    Warehouse:
+      required:
+      - id
+      - location
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of warehouse
+          example: W001
+        location:
+          type: string
+          description: Location of warehouse
+          example: banglore
+        type:
+          type: string
+          description: Type of item
+          example: product
+          enum:
+          - material
+          - product
+          - component
+        capacity:
+          type: integer
+          description: Capacity of warehouse
+        items:
+          type: array
+          description: Array of items stored in warehouse
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/Product'
+            - $ref: '#/components/schemas/Material'
+      example:
+        location: banglore
+        id: W001
+        type: product
+        items:
+        - ""
+        - ""
+        capacity: 0
+    Factory:
+      required:
+      - id
+      - location
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the factory
+          example: F001
+        location:
+          type: string
+          description: Location of the factory
+          example: mumbai
+        products:
+          type: array
+          description: Products or components manufactured
+          items:
+            $ref: '#/components/schemas/Product'
+      example:
+        location: mumbai
+        id: F001
+        products:
+        - dateCreated: 2020-03-31T00:00:00.000+0000
+          name: Cere Cort 1
+          id: P001
+          category: hardware
+          version: 0.0.1
+          wip: true
+        - dateCreated: 2020-03-31T00:00:00.000+0000
+          name: Cere Cort 1
+          id: P001
+          category: hardware
+          version: 0.0.1
+          wip: true
+    Error:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    q:
+      type: object
+      properties:
+        name:
+          type: string
+        dateCreated:
+          type: string
+          format: date
+        wip:
+          type: boolean
+      example: ?name=[name]&dateCreated=[date]&wip=[false]
+    q_1:
+      type: object
+      properties:
+        name:
+          type: string
+      example: ?name=[name]
+    q_2:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+      example: ?name=[name]&type=[type]
+    q_3:
+      type: object
+      properties:
+        name:
+          type: string
+      example: ?name=[name]
+    q_4:
+      type: object
+      properties:
+        name:
+          type: string
+        ownership:
+          type: string
+          enum:
+          - first
+          - third
+        location:
+          type: string
+      example: ?name=[name]&ownership=[ownership]&location=[location]&name=[name]
+    body:
+      type: object
+      properties:
+        productID:
+          type: string
+      description: ID of the product to be added
+    body_1:
+      oneOf:
+      - type: object
+        properties:
+          productID:
+            type: string
+            description: ID of the product
+      - type: object
+        properties:
+          materialID:
+            type: string
+            description: ID of the material
+    q_5:
+      type: object
+      properties:
+        location:
+          type: string
+        type:
+          type: string
+        capacity:
+          type: string
+    body_2:
+      type: object
+      properties:
+        productID:
+          type: string
+          description: ID of the product
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    LimitQuery:
+      name: limit
+      in: query
+      description: The number of items to retrieve
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: integer
+    OffSetQuery:
+      name: offset
+      in: query
+      description: Number of items to set offset to
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: integer
+  securitySchemes:
+    batAuth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://bat.com/oauth
+          scopes:
+            admin: Grants access to admin (write)
+            maintainer: Grants access to update
+            read: Grants access to read

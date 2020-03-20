@@ -2,13 +2,12 @@ openapi: 3.0.0
 info:
   version: '1.0.0'
   title: 'Brainwave Assistive Technologies'
-  description: 'REST API for Brainwave Assistive Technologics Supply chain mangement and logistics.'
+  description: 'REST API for <b>Brainwave Assistive Technologics</b> Supply chain mangement and logistics.<br><br>The product mangement system is made for a startup named Brainwave Assistive Technologies. The startup builds neurotechnology devices with the help of Brain Computer Interfaces. The product mangement system is meant for the employees of the company to help with supply chain management and logistics.'
   contact:
     email: "shreyansh@ieee.org"
   license:
     name: MIT License
     url: 'https://opensource.org/licenses/MIT'
-# Added by API Auto Mocking Plugin
 
 servers:
   # Added by API Auto Mocking Plugin
@@ -17,6 +16,7 @@ servers:
   - description: Localhost Server
     url: http://localhost:3000
 
+# OAuth 2 authentication
 security:
   - batAuth:
       - read
@@ -165,7 +165,7 @@ paths:
           
       responses:
         200:
-          description: "successful delete"
+          description: "successfully deleted"
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -951,8 +951,6 @@ paths:
       responses:
         200:
           description: "successful operation"
-        400:
-          $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/Unauthorized'
         404:
@@ -1090,6 +1088,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Warehouse'
+        400:
+          $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/Unauthorized'
   
@@ -1141,6 +1141,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Warehouse'
+        400:
+          $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/Unauthorized'
         404:
@@ -1148,7 +1150,7 @@ paths:
   
   "/warehouses/{warehouseID}/items":
     get:
-      summary: "Get all items stored in warehouse"
+      summary: "Get all items stored"
       description: "Returns array of items in warehouse"
       operationId: "getWarehouseItems"
       tags:
@@ -1175,7 +1177,8 @@ paths:
         404:
           $ref: '#/components/responses/NotFound'
     put:
-      summary: "Add new item to warehouse"
+      summary: "Add item"
+      description: "Add new item to warehouse"
       tags:
       - "warehouse"
       parameters:
@@ -1199,6 +1202,16 @@ paths:
                     materialID:
                       type: string
                       description: "ID of the material"
+            examples:
+              Product:
+                value: 
+                  type: product
+                  id: "P001"
+              Material:
+                value: 
+                  type: material
+                  id: "M001"
+                
       responses:
         200:
           description: "successful operation"
@@ -1214,6 +1227,8 @@ paths:
       tags:
         - "search"
       parameters: 
+      - $ref: '#/components/parameters/LimitQuery'
+      - $ref: '#/components/parameters/OffSetQuery'
       - name: "q"
         in: query
         required: false
@@ -1226,8 +1241,8 @@ paths:
               type: string
             capacity:
               type: string
-      - $ref: '#/components/parameters/LimitQuery'
-      - $ref: '#/components/parameters/OffSetQuery'
+        example: "?location=[location]&type=[type]&capacity=[capacity]"
+        
       responses:
         200:
           description: "successful operation"
@@ -1308,6 +1323,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Factory'
+        400:
+          $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/Unauthorized'
         404:
@@ -1336,6 +1353,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Factory'
+        400:
+          $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/Unauthorized'
         404:
@@ -1414,6 +1433,8 @@ paths:
       responses:
         200:
           description: "successful operation"
+        400:
+          $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/Unauthorized'
         404:
@@ -1452,16 +1473,13 @@ paths:
       tags:
         - "search"
       parameters: 
-      - name: "q"
+      - $ref: '#/components/parameters/LimitQuery'
+      - $ref: '#/components/parameters/OffSetQuery'
+      - name: "location"
         in: query
         required: false
         schema:
-          type: object
-          properties:
-            location:
-              type: string
-      - $ref: '#/components/parameters/LimitQuery'
-      - $ref: '#/components/parameters/OffSetQuery'
+          type: string
       responses:
         200:
           description: "successful operation"
@@ -1573,9 +1591,6 @@ components:
           type: string
           description: "Name of the supplier"
           example: "Radiant Electronics"
-        # forProduct:
-        #   type: string
-        #   description: "ID of the product to which materials are supplied to"
         materials:
           type: array
           items:
@@ -1753,3 +1768,6 @@ components:
             'admin': Grants access to admin (write)
             'maintainer': Grants access to update
             'read': Grants access to read
+
+
+            

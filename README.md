@@ -4,9 +4,14 @@ Product Manegement REST API
 # Description
 The product mangement system is made for a startup named Brainwave Assistive Technologies. The startup builds neurotechnology devices with the help of Brain Computer Interfaces. The product mangement system is meant for the employees of the company to help with supply chain management and logistics.
 
-**Swagger API Link**
+**Swagger API Code Link**
 
 [BAT v1](https://app.swaggerhub.com/apis/shreyanshVIT/BAT/1.0.0)
+
+
+**Swagger API Documentation Link**
+
+[BAT v1](https://app.swaggerhub.com/apis-docs/shreyanshVIT/BAT/1.0.0)
 
 **Github Documentation**
 
@@ -104,3 +109,56 @@ The following class diagram describes the relations between the entities used in
   - 400
   - 401
   - 404
+
+# Some of the features which are used
+
+![auth](./assets/auth.png)
+Authentication
+
+![auth](./assets/tags.png)
+Tags
+
+![auth](./assets/requestBody.png)
+Request Body
+
+![auth](./assets/sucess.png)
+Sucessful Response
+
+
+![auth](./assets/error.png)
+Error Responses
+
+![auth](./assets/getParam.png)
+GET Parameters
+
+![auth](./assets/examples.png)
+![auth](./assets/examples1.png)
+Multiple Examples
+
+
+![auth](./assets/query.png)
+Query String
+
+![auth](./assets/security.png)
+Security Scheme with scopes
+
+![auth](./assets/params.png)
+Reusable Parameters
+
+![auth](./assets/responses.png)
+Reusable Responses
+
+![auth](./assets/schemas.png)
+Reusable Schemas
+
+
+
+
+
+
+
+
+
+
+
+
