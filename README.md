@@ -113,42 +113,54 @@ The following class diagram describes the relations between the entities used in
 # Some of the features which are used
 
 ![auth](./assets/auth.png)
+
 Authentication
 
 ![auth](./assets/tags.png)
+
 Tags
 
 ![auth](./assets/requestBody.png)
+
 Request Body
 
 ![auth](./assets/sucess.png)
+
 Sucessful Response
 
 
 ![auth](./assets/error.png)
+
 Error Responses
 
 ![auth](./assets/getParam.png)
+
 GET Parameters
 
 ![auth](./assets/examples.png)
 ![auth](./assets/examples1.png)
+
 Multiple Examples
 
 
 ![auth](./assets/query.png)
+
 Query String
 
 ![auth](./assets/security.png)
+
 Security Scheme with scopes
 
 ![auth](./assets/params.png)
+
 Reusable Parameters
 
 ![auth](./assets/responses.png)
+
 Reusable Responses
 
 ![auth](./assets/schemas.png)
+
 Reusable Schemas
 
 
