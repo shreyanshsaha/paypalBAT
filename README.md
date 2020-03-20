@@ -17,6 +17,10 @@ The product mangement system is made for a startup named Brainwave Assistive Tec
 
 [Documentation Link](https://github.com/shreyanshsaha/paypalBAT)
 
+**Paypal VAP Class Repo**
+
+[PayPalVAP](https://github.com/shreyanshsaha/PayPalVAP)
+
 # Class Diagram
 
 The following class diagram describes the relations between the entities used in the API.
